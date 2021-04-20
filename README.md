@@ -70,6 +70,32 @@ We can remotely access the SMB share using the syntax:
              smbclient -L 10.10.10.11
              sbmclient //10.10.10.11/profiles -U username -p portnumber
              
+### 🔥 SAMBA :
+![O8S93Kr](https://user-images.githubusercontent.com/55437834/115381740-ad362b80-a1f5-11eb-8455-95fed732198a.png)
+
+Samba is the standard Windows interoperability suite of programs for Linux and Unix. It allows end users to access and use files, printers and other commonly shared resources on a companies intranet or internet. Its often referred to as a network file system.
+Samba is based on the common client/server protocol of Server Message Block (SMB). SMB is developed only for Windows, without Samba, other computer platforms would be isolated from Windows machines, even if they were part of the same network.
+
+### Enumerate Samba :
+
+Using nmap we can enumerate a machine for SMB shares.
+
+Nmap has the ability to run to automate a wide variety of networking tasks. There is a script to enumerate shares!
+
+#### 👀 nmap -p 445 --script=smb-enum-shares.nse,smb-enum-users.nse MACHINE_IP
+
+SMB has two ports, 445 and 139.
+
+![bkgVNy3](https://user-images.githubusercontent.com/55437834/115381751-b1fadf80-a1f5-11eb-944e-3eff39ed3e65.png)
+
+On most distributions of Linux smbclient is already installed. Lets inspect one of the shares.
+
+smbclient //<ip>/anonymous
+
+Using your machine, connect to the machines network share.
+
+![B1FXBt8](https://user-images.githubusercontent.com/55437834/115381766-b58e6680-a1f5-11eb-9ab5-164a1ddf6da7.png)
+
 
 
 # Telnet (Basic Port 23) :
@@ -176,4 +202,12 @@ Finally  ,
 ##### 😍Here , paradoxial.test is the username of victim and ShibaPretzel79 is the password of victim
 
 🙄 Happy Hacking 😍
+
+#### Note :UDP port for NFS is 111
+
+When nmap port scan will have shown port 111 running the service rpcbind. This is just a server that converts remote procedure call (RPC) program number into universal addresses. When an RPC service is started, it tells rpcbind the address at which it is listening and the RPC program number its prepared to serve. 
+
+In our case, port 111 is access to a network file system. Lets use nmap to enumerate this.
+
+#### 👀 nmap -p 111 --script=nfs-ls,nfs-statfs,nfs-showmount MACHINE_IP
 
